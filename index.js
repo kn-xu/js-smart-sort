@@ -1,15 +1,24 @@
 "use strict";
+
 /**
- * JS Smart Sort
+ * Export
  *
- * @constructor
+ * @type {{smartSort, bubbleSort, quickSort, mergeSort, insertionSort, selectionSort}}
  */
-function JSSmartSort() {
+module.exports = (function () {
     // Initializes some constants
     var TYPEOF_NUMBER = 'number'
         , TYPE_OF_STRING = 'string'
         , TYPEOF_OBJECT = 'object';
 
+    return {
+        smartSort: smartSort,
+        bubbleSort: bubbleSort,
+        quickSort: quickSort,
+        mergeSort: mergeSort,
+        insertionSort: insertionSort,
+        selectionSort: selectionSort
+    };
 
     /**
      * Smart Sort will dictate which sort algorithm to use depending on contextual data provided in the array itself
@@ -164,7 +173,7 @@ function JSSmartSort() {
 
             // Once the index is found to have the smallest value, we will switch the values with the current index the
             // Overarching loop is on
-            switchIndexValues(arr, arr[i], arr[minimumId]);
+            switchIndexValues(arr, i, minimumId);
         }
 
         // Return the sorted array
@@ -194,27 +203,57 @@ function JSSmartSort() {
         // i.e. If we are sorting an array of numbers, we should not detect any string or objects
         // If sorting by keys of an object, every element should have that key or throw an error
         // Special case for sorting by objects as opposed string or numbers
-        var sortObjects = typeof arr[0] === TYPEOF_OBJECT
-            , currentValue
-            , comparedValue;
+        var sortObjects = typeof arr[0] === TYPEOF_OBJECT;
 
-        // The idea of this algorithm is to loop through an array of elements and find a value in which the current
-        // element is smaller than the current index's value.
-        for (var i = 0; i < arr.length; i++) {
-            currentValue = sortObjects ? arr[i][field] : arr[i];
+        // Depending if sort is done on an array of objects or strings/numbers
+        return sortObjects ? insertionSortObjects(arr, field) : insertionSortPrimitive(arr);
 
-            // This part will keep looping closer to the head of the array until we find a value that's smaller than the
-            // current indexes value and slide the indexes over almost like an unshift
-            for (var j = i - 1; j > -1; j--) {
-                comparedValue = sortObjects ? arr[j][field] : arr[j];
-                if (comparedValue > currentValue) continue;
-                arr[j + 1] = arr[j]
+        /**
+         * Insertion sort for array of objects
+         *
+         * @param arr
+         * @param field
+         * @returns {*}
+         */
+        function insertionSortObjects(arr, field) {
+            // The idea of this algorithm is to loop through an array of elements and find a value in which the current
+            // element is smaller than the current index's value.
+            for (var i = 0; i < arr.length; i++) {
+                // This part will keep looping closer to the head of the array until we find a value that's smaller than the
+                // current indexes value and slide the indexes over almost like an unshift
+                var temp = arr[i];
+                var j = i - 1;
+                while (j >= 0 && arr[j][field] > temp[field]) {
+                    arr[j + 1] = arr[j];
+                    j--;
+                }
+                arr[j + 1] = temp;
             }
-            arr[j + 1] = arr[i];
+            return arr;
         }
 
-        // Return sorted array
-        return arr;
+        /**
+         * Insertion sort for string/numbers
+         *
+         * @param arr
+         * @returns {*}
+         */
+        function insertionSortPrimitive(arr) {
+            // The idea of this algorithm is to loop through an array of elements and find a value in which the current
+            // element is smaller than the current index's value.
+            for (var i = 0; i < arr.length; i++) {
+                // This part will keep looping closer to the head of the array until we find a value that's smaller than the
+                // current indexes value and slide the indexes over almost like an unshift
+                var temp = arr[i];
+                var j = i - 1;
+                while (j >= 0 && arr[j] > temp) {
+                    arr[j + 1] = arr[j];
+                    j--;
+                }
+                arr[j + 1] = temp;
+            }
+            return arr;
+        }
     }
 
     /**
@@ -370,7 +409,7 @@ function JSSmartSort() {
         // We need to determine the elements of the array and the consistency of it
         // i.e. If we are sorting an array of numbers, we should not detect any string or objects
         // If sorting by keys of an object, every element should have that key or throw an error
-        var arrayType = typeof arr[0] === TYPEOF_OBJECT;
+        var arrayType = typeof arr[0];
         for (var i = 1; i < arr.length; i++) {
             if (arrayType === TYPEOF_OBJECT) {
                 if (!field) throw "Can\'t sorry this array without a field to sort by, please enter a second parameter to sort by.";
@@ -397,6 +436,4 @@ function JSSmartSort() {
         // Set the right indexes value to the left
         arr[rightIndex] = placeholder;
     }
-}
-
-module.exports = JSSmartSort;
+})();
