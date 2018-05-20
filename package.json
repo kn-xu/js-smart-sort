@@ -1,0 +1,24 @@
+{
+  "name": "js-smart-sort",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kn-xu/js-smart-sort.git"
+  },
+  "keywords": [
+    "js",
+    "smart",
+    "sort"
+  ],
+  "author": "Kevin Xu <me@xukev.in>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kn-xu/js-smart-sort/issues"
+  },
+  "homepage": "https://github.com/kn-xu/js-smart-sort#readme"
+}
